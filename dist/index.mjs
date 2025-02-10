@@ -33913,10 +33913,9 @@ async function createCMakeBuild(sourceDir, buildDir, cmakeArgs) {
     return true;
 }
 
-async function fileExists(file) {
+function fileExists(filePath) {
     try {
-        const stat = await external_node_fs_namespaceObject.stat(file);
-        return stat.isFile();
+        return external_node_fs_namespaceObject.statSync(filePath).isFile();
     } catch (err) {
         return false;
     }
@@ -33971,8 +33970,8 @@ async function run() {
 
     // Check if the compile_commands.json file exists in the build directory.
     const compileCommandsPath = external_node_path_namespaceObject.join(buildDir, 'compile_commands.json');
-    if (!await fileExists(compileCommandsPath)) {
-        lib_core.info('compile_commands.json not found, creating a new CMake build');
+    if (!fileExists(compileCommandsPath)) {
+        lib_core.info(compileCommandsPath + ' not found, creating a new CMake build');
 
         // Create the CMake build.
         if (!await createCMakeBuild(sourceDir, buildDir, cmakeArgs)) {
@@ -34047,5 +34046,6 @@ async function run() {
 }
 
 run();
+
 })();
 
